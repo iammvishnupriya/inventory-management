@@ -22,6 +22,7 @@ public class SecurityConfig {
                         .requestMatchers("/user_management/api/auth/**").permitAll()  // Authentication-related endpoints are publicly accessible
                         .requestMatchers("inventory_management/api/product/**").permitAll()
                         .requestMatchers("inventory_management/api/category/**").permitAll()// Public endpoint (if required)
+                        .requestMatchers("/inventory_management/api/warehouses/**").permitAll()
                         .anyRequest().authenticated()  // All other endpoints are secured
                 )
                 .csrf(csrf -> csrf.disable())  // Disable CSRF for simplicity
