@@ -53,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<SuccessResponse<ProductDto>> updateProduct(String id, ProductDto dto) {
-        Optional<Product> productOpt = productRepository.findById(Long.valueOf(id));
+        Optional<Product> productOpt = productRepository.findById(Math.toIntExact(Long.valueOf(id)));
         if (productOpt.isEmpty()) {
             return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Product not found", null));
         }
@@ -85,13 +85,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<SuccessResponse<String>> deleteProduct(String id) {
-        productRepository.deleteById(Long.valueOf(id));
+        productRepository.deleteById(Math.toIntExact(Long.valueOf(id)));
         return ResponseEntity.ok(new SuccessResponse<>(200, "Product deleted", "Deleted successfully"));
     }
 
     @Override
     public ResponseEntity<SuccessResponse<ProductDto>> getProductById(String id) {
-        Optional<Product> productOpt = productRepository.findById(Long.valueOf(id));
+        Optional<Product> productOpt = productRepository.findById(Math.toIntExact(Long.valueOf(id)));
         return productOpt.map(product -> {
                     ProductDto productDto = new ProductDto();
                     productDto.setId(product.getId());

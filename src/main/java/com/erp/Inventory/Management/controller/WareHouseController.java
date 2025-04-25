@@ -11,10 +11,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/inventory_management/api/warehouses")
-@RequiredArgsConstructor
 public class WareHouseController {
 
     private final WareHouseService wareHouseService;
+
+    public WareHouseController(WareHouseService wareHouseService) {
+        this.wareHouseService = wareHouseService;
+    }
 
     @PostMapping("/add")
     public ResponseEntity<SuccessResponse<WarehouseDto>> create(@RequestBody WarehouseDto dto) {
