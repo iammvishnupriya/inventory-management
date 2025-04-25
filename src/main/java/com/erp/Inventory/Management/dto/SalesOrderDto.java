@@ -4,7 +4,7 @@ import com.erp.Inventory.Management.model.SalesOrder;
 import java.time.LocalDate;
 
 public class SalesOrderDto {
-    private Long id;
+    private Integer id;
     private String customerName;
     private String customerEmail;
     private String customerPhone;
@@ -23,7 +23,7 @@ public class SalesOrderDto {
     public SalesOrderDto() {
     }
 
-    public SalesOrderDto(Long id, String customerName, String customerEmail, String customerPhone, Long productId,
+    public SalesOrderDto(Integer id, String customerName, String customerEmail, String customerPhone, Long productId,
                         String productName, String productSku, Integer quantity, Integer fulfilledQuantity,
                         LocalDate orderDate, LocalDate fulfillmentDate, SalesOrder.Status status,
                         Double unitPrice, Double totalPrice, String notes) {
@@ -44,11 +44,11 @@ public class SalesOrderDto {
         this.notes = notes;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -170,7 +170,7 @@ public class SalesOrderDto {
     }
 
     public static class SalesOrderDtoBuilder {
-        private Long id;
+        private Integer id;
         private String customerName;
         private String customerEmail;
         private String customerPhone;
@@ -189,7 +189,7 @@ public class SalesOrderDto {
         SalesOrderDtoBuilder() {
         }
 
-        public SalesOrderDtoBuilder id(Long id) {
+        public SalesOrderDtoBuilder id(Integer id) {
             this.id = id;
             return this;
         }

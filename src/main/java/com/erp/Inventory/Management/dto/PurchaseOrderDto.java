@@ -4,7 +4,7 @@ import com.erp.Inventory.Management.model.PurchaseOrderEntity;
 import java.time.LocalDate;
 
 public class PurchaseOrderDto {
-    private Long id;
+    private Integer id;
     private Long supplierId;
     private String supplierName;
     private Long productId;
@@ -22,7 +22,7 @@ public class PurchaseOrderDto {
     public PurchaseOrderDto() {
     }
 
-    public PurchaseOrderDto(Long id, Long supplierId, String supplierName, Long productId, String productName,
+    public PurchaseOrderDto(Integer id, Long supplierId, String supplierName, Long productId, String productName,
                            String productSku, Integer quantity, Integer receivedQuantity, LocalDate orderDate,
                            LocalDate receivedDate, PurchaseOrderEntity.Status status, Double unitPrice,
                            Double totalPrice, String notes) {
@@ -42,11 +42,11 @@ public class PurchaseOrderDto {
         this.notes = notes;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -160,7 +160,7 @@ public class PurchaseOrderDto {
     }
 
     public static class PurchaseOrderDtoBuilder {
-        private Long id;
+        private Integer id;
         private Long supplierId;
         private String supplierName;
         private Long productId;
@@ -178,7 +178,7 @@ public class PurchaseOrderDto {
         PurchaseOrderDtoBuilder() {
         }
 
-        public PurchaseOrderDtoBuilder id(Long id) {
+        public PurchaseOrderDtoBuilder id(Integer id) {
             this.id = id;
             return this;
         }

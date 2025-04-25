@@ -1,12 +1,14 @@
 package com.erp.Inventory.Management.dto;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+
 import java.time.LocalDateTime;
 
 /**
  * Data Transfer Object for Stock entity
  */
 public class StockDto {
-    private Long id;
+    private Integer id;
     private Long productId;
     private String productName;
     private String productSku;
@@ -25,10 +27,10 @@ public class StockDto {
     public StockDto() {
     }
     
-    public StockDto(Long id, Long productId, String productName, String productSku, Long warehouseId,
-                   String warehouseLocation, Integer quantity, LocalDateTime lastUpdated,
-                   String lastUpdateReason, Integer reorderLevel, Integer optimalLevel,
-                   boolean lowStock, boolean outOfStock) {
+    public StockDto(Integer id, Long productId, String productName, String productSku, Long warehouseId,
+                    String warehouseLocation, Integer quantity, LocalDateTime lastUpdated,
+                    String lastUpdateReason, Integer reorderLevel, Integer optimalLevel,
+                    boolean lowStock, boolean outOfStock) {
         this.id = id;
         this.productId = productId;
         this.productName = productName;
@@ -44,11 +46,11 @@ public class StockDto {
         this.outOfStock = outOfStock;
     }
     
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
     
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     
@@ -157,7 +159,7 @@ public class StockDto {
     }
     
     public static class StockDtoBuilder {
-        private Long id;
+        private Integer id;
         private Long productId;
         private String productName;
         private String productSku;
@@ -174,7 +176,7 @@ public class StockDto {
         StockDtoBuilder() {
         }
         
-        public StockDtoBuilder id(Long id) {
+        public StockDtoBuilder id(Integer id) {
             this.id = id;
             return this;
         }
