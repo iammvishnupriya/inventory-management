@@ -27,17 +27,17 @@ public class CategoryController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<SuccessResponse<CategoryDto>> update(@PathVariable Long id, @RequestBody CategoryDto dto) {
+    public ResponseEntity<SuccessResponse<CategoryDto>> update(@PathVariable Integer id, @RequestBody CategoryDto dto) {
         return categoryService.update(id, dto);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<SuccessResponse<String>> delete(@PathVariable Long id) {
+    public ResponseEntity<SuccessResponse<String>> delete(@PathVariable Integer id) {
         return categoryService.delete(id);
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<SuccessResponse<CategoryDto>> get(@PathVariable Long id) {
+    public ResponseEntity<SuccessResponse<CategoryDto>> get(@PathVariable Integer id) {
         return categoryService.get(id);
     }
 

@@ -5,6 +5,7 @@ import com.erp.Inventory.Management.dto.SuccessResponse;
 import com.erp.Inventory.Management.model.Category;
 import com.erp.Inventory.Management.repository.CategoryRepository;
 import com.erp.Inventory.Management.service.CategoryService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<SuccessResponse<CategoryDto>> update(Long id, CategoryDto dto) {
+    public ResponseEntity<SuccessResponse<CategoryDto>> update(Integer id, CategoryDto dto) {
         Optional<Category> categoryOpt = categoryRepository.findById(id);
         if (categoryOpt.isEmpty()) {
             return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Category not found", null));
@@ -51,13 +52,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<SuccessResponse<String>> delete(Long id) {
+    public ResponseEntity<SuccessResponse<String>> delete(Integer id) {
         categoryRepository.deleteById(id);
         return ResponseEntity.ok(new SuccessResponse<>(200, "Category deleted", "Deleted successfully"));
     }
 
     @Override
-    public ResponseEntity<SuccessResponse<CategoryDto>> get(Long id) {
+    public ResponseEntity<SuccessResponse<CategoryDto>> get(Integer id) {
         Optional<Category> categoryOpt = categoryRepository.findById(id);
         return categoryOpt.map(category -> {
                     CategoryDto categoryDto = new CategoryDto();

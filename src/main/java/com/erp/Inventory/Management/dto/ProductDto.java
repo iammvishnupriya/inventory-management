@@ -1,5 +1,6 @@
 package com.erp.Inventory.Management.dto;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 @Data
@@ -7,18 +8,18 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ProductDto {
-    private Long id;
+    private Integer id;
     private String name;
     private String sku;
     private Double price;
     private Integer stockQuantity;
-    private Long categoryId;
+    private Integer categoryId;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -54,11 +55,11 @@ public class ProductDto {
         this.stockQuantity = stockQuantity;
     }
 
-    public Long getCategoryId() {
+    public Integer getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Long categoryId) {
+    public void setCategoryId(Integer categoryId) {
         this.categoryId = categoryId;
     }
 }

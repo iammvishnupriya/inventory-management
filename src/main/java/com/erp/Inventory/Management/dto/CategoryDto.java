@@ -2,20 +2,21 @@ package com.erp.Inventory.Management.dto;
 
 
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CategoryDto {
-    private Long id;
+    private Integer id;
     private String categoryName;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
