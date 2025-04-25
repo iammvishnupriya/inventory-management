@@ -21,17 +21,17 @@ public class ProductController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<SuccessResponse<ProductDto>> updateProduct(@PathVariable String id, @RequestBody ProductDto dto) {
+    public ResponseEntity<SuccessResponse<ProductDto>> updateProduct(@PathVariable Integer id, @RequestBody ProductDto dto) {
         return productService.updateProduct(id, dto);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<SuccessResponse<String>> deleteProduct(@PathVariable String id) {
+    public ResponseEntity<SuccessResponse<String>> deleteProduct(@PathVariable Integer id) {
         return productService.deleteProduct(id);
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<SuccessResponse<ProductDto>> getProductById(@PathVariable String id) {
+    public ResponseEntity<SuccessResponse<ProductDto>> getProductById(@PathVariable Integer id) {
         return productService.getProductById(id);
     }
 

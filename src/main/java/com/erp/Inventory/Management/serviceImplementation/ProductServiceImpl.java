@@ -52,8 +52,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<SuccessResponse<ProductDto>> updateProduct(String id, ProductDto dto) {
-        Optional<Product> productOpt = productRepository.findById(Long.valueOf(id));
+    public ResponseEntity<SuccessResponse<ProductDto>> updateProduct(Integer id, ProductDto dto) {
+        Optional<Product> productOpt = productRepository.findById(id);
         if (productOpt.isEmpty()) {
             return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Product not found", null));
         }
@@ -84,14 +84,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<SuccessResponse<String>> deleteProduct(String id) {
-        productRepository.deleteById(Long.valueOf(id));
+    public ResponseEntity<SuccessResponse<String>> deleteProduct(Integer id) {
+        productRepository.deleteById(id);
         return ResponseEntity.ok(new SuccessResponse<>(200, "Product deleted", "Deleted successfully"));
     }
 
     @Override
-    public ResponseEntity<SuccessResponse<ProductDto>> getProductById(String id) {
-        Optional<Product> productOpt = productRepository.findById(Long.valueOf(id));
+    public ResponseEntity<SuccessResponse<ProductDto>> getProductById(Integer id) {
+        Optional<Product> productOpt = productRepository.findById(id);
         return productOpt.map(product -> {
                     ProductDto productDto = new ProductDto();
                     productDto.setId(product.getId());
@@ -122,4 +122,3 @@ public class ProductServiceImpl implements ProductService {
         return ResponseEntity.ok(new SuccessResponse<>(200, "All products", products));
     }
 }
-
