@@ -31,7 +31,7 @@ public class WareHouseServiceImpl implements WareHouseService {
     }
 
     @Override
-    public WarehouseDto updateWarehouse(Long id, WarehouseDto dto) {
+    public WarehouseDto updateWarehouse(Integer id, WarehouseDto dto) {
         Warehouse warehouse = warehouseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id " + id));
 
@@ -42,7 +42,7 @@ public class WareHouseServiceImpl implements WareHouseService {
     }
 
     @Override
-    public WarehouseDto getWarehouseById(Long id) {
+    public WarehouseDto getWarehouseById(Integer id) {
         Warehouse warehouse = warehouseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Warehouse not found with id " + id));
         return mapToDto(warehouse);
@@ -57,7 +57,7 @@ public class WareHouseServiceImpl implements WareHouseService {
     }
 
     @Override
-    public void deleteWarehouse(Long id) {
+    public void deleteWarehouse(Integer id) {
         if (!warehouseRepository.existsById(id)) {
             throw new ResourceNotFoundException("Warehouse not found with id " + id);
         }

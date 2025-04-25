@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface WareHouseService {
     WarehouseDto createWarehouse(WarehouseDto dto);
-    WarehouseDto updateWarehouse(Long id, WarehouseDto dto);
-    WarehouseDto getWarehouseById(Long id);
+    WarehouseDto updateWarehouse(Integer id, WarehouseDto dto);
+    WarehouseDto getWarehouseById(Integer id);
     List<WarehouseDto> getAllWarehouses();
-    void deleteWarehouse(Long id);
+    void deleteWarehouse(Integer id);
 }

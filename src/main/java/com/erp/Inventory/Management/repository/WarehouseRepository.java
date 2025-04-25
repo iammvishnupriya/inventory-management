@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
+public interface WarehouseRepository extends JpaRepository<Warehouse, Integer> {
     Optional<Warehouse> findByLocation(String location);
     List<Warehouse> findByCapacityGreaterThanEqual(Integer capacity);
 }

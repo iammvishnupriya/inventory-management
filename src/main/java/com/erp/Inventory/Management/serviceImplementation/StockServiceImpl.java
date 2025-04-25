@@ -1,210 +1,140 @@
-//package com.erp.Inventory.Management.serviceImplementation;
-//
-//import com.erp.Inventory.Management.dto.StockDto;
-//import com.erp.Inventory.Management.exception.ProductException;
-//import com.erp.Inventory.Management.model.Product;
-//import com.erp.Inventory.Management.model.Stock;
-//import com.erp.Inventory.Management.repository.ProductRepository;
-//import com.erp.Inventory.Management.repository.StockRepository;
-//import com.erp.Inventory.Management.service.StockService;
-//import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.beans.BeanUtils;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import java.time.LocalDateTime;
-//import java.util.List;
-//import java.util.stream.Collectors;
-//
-///**
-// * Implementation of the StockService interface
-// */
-//@Service
-//@RequiredArgsConstructor
-//@Slf4j
-//public class StockServiceImpl implements StockService {
-//
-//    private final StockRepository stockRepository;
-//    private final ProductRepository productRepository;
-//
-//    /**
-//     * Converts a Stock entity to a StockDto
-//     * @param stock The stock entity to convert
-//     * @return The converted StockDto
-//     */
-//    private StockDto toDto(Stock stock) {
-//        if (stock == null) {
-//            return null;
-//        }
-//        StockDto dto = new StockDto();
-//        BeanUtils.copyProperties(stock, dto);
-//
-//        // Set product information
-//        if (stock.getProduct() != null) {
-//            dto.setProductId(stock.getProduct().getId());
-//            dto.setProductName(stock.getProduct().getName());
-//            dto.setProductSku(stock.getProduct().getSku());
-//        }
-//
-//        return dto;
-//    }
-//
-//    /**
-//     * Updates stock level for a product
-//     * @param productId The ID of the product
-//     * @param quantity The new quantity
-//     * @return The updated StockDto
-//     */
-//    @Override
-//    @Transactional
-//    public StockDto updateStock(Long productId, Integer quantity) {
-//        log.info("Updating stock for product ID: {} to quantity: {}", productId, quantity);
-//
-//        if (productId == null) {
-//            throw new IllegalArgumentException("Product ID cannot be null");
-//        }
-//
-//        if (quantity == null || quantity < 0) {
-//            throw new IllegalArgumentException("Quantity cannot be negative");
-//        }
-//
-//        // Find the product
-//        Product product = productRepository.findById(productId)
-//                .orElseThrow(() -> new ProductException("Product not found with ID: " + productId, "PRODUCT_NOT_FOUND"));
-//
-//        // Find existing stock or create new one
-//        Stock stock = stockRepository.findByProductId(productId)
-//                .orElse(new Stock());
-//
-//        stock.setProduct(product);
-//        stock.setQuantity(quantity);
-//        stock.setLastUpdated(LocalDateTime.now());
-//
-//        Stock saved = stockRepository.save(stock);
-//        log.info("Successfully updated stock for product ID: {}", productId);
-//
-//        return toDto(saved);
-//    }
-//
-//    /**
-//     * Gets current stock level for a product
-//     * @param productId The ID of the product
-//     * @return The StockDto with current level
-//     */
-//    @Override
-//    @Transactional(readOnly = true)
-//    public StockDto getStockByProductId(Long productId) {
-//        log.info("Fetching stock for product ID: {}", productId);
-//
-//        if (productId == null) {
-//            throw new IllegalArgumentException("Product ID cannot be null");
-//        }
-//
-//        // Check if product exists
-//        if (!productRepository.existsById(productId)) {
-//            throw new ProductException("Product not found with ID: " + productId, "PRODUCT_NOT_FOUND");
-//        }
-//
-//        // Find stock
-//        Stock stock = stockRepository.findByProductId(productId)
-//                .orElseThrow(() -> new ProductException("Stock not found for product ID: " + productId, "STOCK_NOT_FOUND"));
-//
-//        return toDto(stock);
-//    }
-//
-//    /**
-//     * Gets all stock entries
-//     * @return List of all StockDtos
-//     */
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<StockDto> getAllStocks() {
-//        log.info("Fetching all stocks");
-//
-//        List<Stock> stocks = stockRepository.findAll();
-//        log.info("Found {} stock entries", stocks.size());
-//
-//        return stocks.stream()
-//                .map(this::toDto)
-//                .collect(Collectors.toList());
-//    }
-//
-//    /**
-//     * Gets all stock entries with quantity below threshold
-//     * @param threshold The threshold quantity
-//     * @return List of StockDtos below threshold
-//     */
-//    @Override
-//    @Transactional(readOnly = true)
-//    public List<StockDto> getLowStockItems(Integer threshold) {
-//        log.info("Fetching low stock items below threshold: {}", threshold);
-//
-//        if (threshold == null || threshold < 0) {
-//            throw new IllegalArgumentException("Threshold cannot be negative");
-//        }
-//
-//        List<Stock> lowStocks = stockRepository.findByQuantityLessThanEqual(threshold);
-//        log.info("Found {} low stock items", lowStocks.size());
-//
-//        return lowStocks.stream()
-//                .map(this::toDto)
-//                .collect(Collectors.toList());
-//    }
-//
-//    /**
-//     * Adjusts stock level (add or subtract)
-//     * @param productId The ID of the product
-//     * @param adjustment The adjustment amount (positive or negative)
-//     * @param reason The reason for adjustment
-//     * @return The updated StockDto
-//     */
-//    @Override
-//    @Transactional
-//    public StockDto adjustStock(Long productId, Integer adjustment, String reason) {
-//        log.info("Adjusting stock for product ID: {} by: {} for reason: {}", productId, adjustment, reason);
-//
-//        if (productId == null) {
-//            throw new IllegalArgumentException("Product ID cannot be null");
-//        }
-//
-//        if (adjustment == null) {
-//            throw new IllegalArgumentException("Adjustment amount cannot be null");
-//        }
-//
-//        if (reason == null || reason.trim().isEmpty()) {
-//            throw new IllegalArgumentException("Adjustment reason cannot be empty");
-//        }
-//
-//        // Find the product
-//        Product product = productRepository.findById(productId)
-//                .orElseThrow(() -> new ProductException("Product not found with ID: " + productId, "PRODUCT_NOT_FOUND"));
-//
-//        // Find existing stock or create new one
-//        Stock stock = stockRepository.findByProductId(productId)
-//                .orElse(new Stock());
-//
-//        // If new stock, set product and initial quantity to 0
-//        if (stock.getId() == null) {
-//            stock.setProduct(product);
-//            stock.setQuantity(0);
-//        }
-//
-//        // Calculate new quantity
-//        int newQuantity = stock.getQuantity() + adjustment;
-//
-//        // Prevent negative stock
-//        if (newQuantity < 0) {
-//            throw new IllegalArgumentException("Cannot adjust stock below zero. Current stock: " + stock.getQuantity());
-//        }
-//
-//        stock.setQuantity(newQuantity);
-//        stock.setLastUpdated(LocalDateTime.now());
-//        stock.setLastUpdateReason(reason);
-//
-//        Stock saved = stockRepository.save(stock);
-//        log.info("Successfully adjusted stock for product ID: {} to new quantity: {}", productId, newQuantity);
-//
-//        return toDto(saved);
-//    }
-//}
+package com.erp.Inventory.Management.serviceImplementation;
+
+import com.erp.Inventory.Management.dto.StockDto;
+import com.erp.Inventory.Management.dto.SuccessResponse;
+import com.erp.Inventory.Management.model.Product;
+import com.erp.Inventory.Management.model.Stock;
+import com.erp.Inventory.Management.model.Warehouse;
+import com.erp.Inventory.Management.repository.ProductRepository;
+import com.erp.Inventory.Management.repository.StockRepository;
+import com.erp.Inventory.Management.repository.WarehouseRepository;
+import com.erp.Inventory.Management.service.StockService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class StockServiceImpl implements StockService {
+
+    @Autowired
+    private StockRepository stockRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private WarehouseRepository warehouseRepository;
+
+    @Override
+    public ResponseEntity<SuccessResponse<StockDto>> createStock(StockDto stockDto) {
+        try {
+            Optional<Product> productOpt = productRepository.findById(stockDto.getProductId());
+            Optional<Warehouse> warehouseOpt = warehouseRepository.findById(stockDto.getWarehouseId());
+
+            if (productOpt.isEmpty() || warehouseOpt.isEmpty()) {
+                return ResponseEntity.status(404).body(new SuccessResponse<>(404, "Product or Warehouse not found", null));
+            }
+
+            Stock stock = new Stock();
+            stock.setProduct(productOpt.get());
+            stock.setWarehouse(warehouseOpt.get());
+            stock.setQuantity(stockDto.getQuantity());
+
+            Stock savedStock = stockRepository.save(stock);
+            stockDto.setId(savedStock.getId());
+
+            return ResponseEntity.ok(new SuccessResponse<>(200, "Stock created successfully", stockDto));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new SuccessResponse<>(500, "Internal Server Error: " + e.getMessage(), null));
+        }
+    }
+
+    @Override
+    public ResponseEntity<SuccessResponse<StockDto>> updateStock(Integer id, StockDto stockDto) {
+        try {
+            Optional<Stock> optionalStock = stockRepository.findById(id);
+
+            if (optionalStock.isPresent()) {
+                Stock stock = optionalStock.get();
+                stock.setQuantity(stockDto.getQuantity());
+
+                Stock updated = stockRepository.save(stock);
+                stockDto.setId(updated.getId());
+                stockDto.setProductId(updated.getProduct().getId());
+                stockDto.setWarehouseId(updated.getWarehouse().getId());
+
+                return ResponseEntity.ok(new SuccessResponse<>(200, "Stock updated successfully", stockDto));
+            } else {
+                return ResponseEntity.status(404).body(new SuccessResponse<>(404, "Stock not found", null));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new SuccessResponse<>(500, "Internal Server Error: " + e.getMessage(), null));
+        }
+    }
+
+    @Override
+    public ResponseEntity<SuccessResponse<String>> deleteStock(Integer id) {
+        try {
+            Optional<Stock> optionalStock = stockRepository.findById(id);
+            if (optionalStock.isPresent()) {
+                stockRepository.deleteById(id);
+                return ResponseEntity.ok(new SuccessResponse<>(200, "Stock deleted successfully", null));
+            } else {
+                return ResponseEntity.status(404).body(new SuccessResponse<>(404, "Stock not found", null));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new SuccessResponse<>(500, "Internal Server Error: " + e.getMessage(), null));
+        }
+    }
+
+    @Override
+    public ResponseEntity<SuccessResponse<StockDto>> getStockById(Integer id) {
+        try {
+            Optional<Stock> optionalStock = stockRepository.findById(id);
+
+            if (optionalStock.isPresent()) {
+                Stock stock = optionalStock.get();
+                StockDto dto = new StockDto();
+                dto.setId(stock.getId());
+                dto.setProductId(stock.getProduct().getId());
+                dto.setProductName(stock.getProduct().getName());
+                dto.setProductSku(stock.getProduct().getSku());
+                dto.setWarehouseId(stock.getWarehouse().getId());
+                dto.setWarehouseLocation(stock.getWarehouse().getLocation());
+                dto.setQuantity(stock.getQuantity());
+
+                return ResponseEntity.ok(new SuccessResponse<>(200, "Stock fetched successfully", dto));
+            } else {
+                return ResponseEntity.status(404).body(new SuccessResponse<>(404, "Stock not found", null));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new SuccessResponse<>(500, "Internal Server Error: " + e.getMessage(), null));
+        }
+    }
+
+    @Override
+    public ResponseEntity<SuccessResponse<List<StockDto>>> getAllStocks() {
+        try {
+            List<Stock> stocks = stockRepository.findAll();
+            List<StockDto> stockDtos = stocks.stream().map(stock -> {
+                StockDto dto = new StockDto();
+                dto.setId(stock.getId());
+                dto.setProductId(stock.getProduct().getId());
+                dto.setProductName(stock.getProduct().getName());
+                dto.setProductSku(stock.getProduct().getSku());
+                dto.setWarehouseId(stock.getWarehouse().getId());
+                dto.setWarehouseLocation(stock.getWarehouse().getLocation());
+                dto.setQuantity(stock.getQuantity());
+                return dto;
+            }).collect(Collectors.toList());
+
+            return ResponseEntity.ok(new SuccessResponse<>(200, "Stocks fetched successfully", stockDtos));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new SuccessResponse<>(500, "Internal Server Error: " + e.getMessage(), null));
+        }
+    }
+}

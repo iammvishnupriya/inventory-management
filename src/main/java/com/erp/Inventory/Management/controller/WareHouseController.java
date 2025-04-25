@@ -14,11 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WareHouseController {
 
-    private WareHouseService wareHouseService;
-
-    public WareHouseController(WareHouseService wareHouseService) {
-        this.wareHouseService = wareHouseService;
-    }
+    private final WareHouseService wareHouseService;
 
     @PostMapping("/add")
     public ResponseEntity<SuccessResponse<WarehouseDto>> create(@RequestBody WarehouseDto dto) {
@@ -26,12 +22,12 @@ public class WareHouseController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<SuccessResponse<WarehouseDto>> update(@PathVariable Long id, @RequestBody WarehouseDto dto) {
+    public ResponseEntity<SuccessResponse<WarehouseDto>> update(@PathVariable Integer id, @RequestBody WarehouseDto dto) {
         return ResponseEntity.ok(new SuccessResponse<>(200, "Warehouse updated successfully", wareHouseService.updateWarehouse(id, dto)));
     }
 
     @GetMapping("/get/{id}")
-    public ResponseEntity<SuccessResponse<WarehouseDto>> getById(@PathVariable Long id) {
+    public ResponseEntity<SuccessResponse<WarehouseDto>> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(new SuccessResponse<>(200, "Warehouse fetched successfully", wareHouseService.getWarehouseById(id)));
     }
 
@@ -41,7 +37,7 @@ public class WareHouseController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<SuccessResponse<String>> delete(@PathVariable Long id) {
+    public ResponseEntity<SuccessResponse<String>> delete(@PathVariable Integer id) {
         wareHouseService.deleteWarehouse(id);
         return ResponseEntity.ok(new SuccessResponse<>(200, "Warehouse deleted successfully", "Deleted"));
     }

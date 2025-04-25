@@ -14,7 +14,7 @@ import java.util.Optional;
  * Repository interface for Stock entity
  */
 @Repository
-public interface StockRepository extends JpaRepository<Stock, Long> {
+public interface StockRepository extends JpaRepository<Stock, Integer> {
     /**
      * Find stocks by product
      * @param product The product
