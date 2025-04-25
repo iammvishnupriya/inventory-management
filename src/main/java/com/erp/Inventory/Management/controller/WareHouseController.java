@@ -16,6 +16,10 @@ public class WareHouseController {
     @Autowired
     private WareHouseService wareHouseService;
 
+    public WareHouseController(WareHouseService wareHouseService) {
+        this.wareHouseService = wareHouseService;
+    }
+
     @PostMapping("/add")
     public ResponseEntity<SuccessResponse<WarehouseDto>> create(@RequestBody WarehouseDto dto) {
         return ResponseEntity.ok(new SuccessResponse<>(200, "Warehouse created successfully", wareHouseService.createWarehouse(dto)));

@@ -40,4 +40,8 @@ public class WarehouseDto {
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
+
+
+
+
 }
