@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +27,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<SuccessResponse<ProductDto>> createProduct(ProductDto dto) {
+        if (dto == null) {
+            return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Product data is null", null));
+        }
+        if (dto.getCategoryId() == null) {
+            return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Category ID is required", null));
+        }
+
         Optional<Category> categoryOpt = categoryRepository.findById(dto.getCategoryId());
         if (categoryOpt.isEmpty()) {
             return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Category not found", null));
@@ -53,9 +61,17 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<SuccessResponse<ProductDto>> updateProduct(Integer id, ProductDto dto) {
+        if (id == null || dto == null) {
+            return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Product ID and data are required", null));
+        }
+
         Optional<Product> productOpt = productRepository.findById(id);
         if (productOpt.isEmpty()) {
             return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Product not found", null));
+        }
+
+        if (dto.getCategoryId() == null) {
+            return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Category ID is required", null));
         }
 
         Optional<Category> categoryOpt = categoryRepository.findById(dto.getCategoryId());
@@ -85,12 +101,25 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<SuccessResponse<String>> deleteProduct(Integer id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Product ID is required", null));
+        }
+
+        Optional<Product> productOpt = productRepository.findById(id);
+        if (productOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Product not found", null));
+        }
+
         productRepository.deleteById(id);
         return ResponseEntity.ok(new SuccessResponse<>(200, "Product deleted", "Deleted successfully"));
     }
 
     @Override
     public ResponseEntity<SuccessResponse<ProductDto>> getProductById(Integer id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Product ID is required", null));
+        }
+
         Optional<Product> productOpt = productRepository.findById(id);
         return productOpt.map(product -> {
                     ProductDto productDto = new ProductDto();
@@ -99,7 +128,9 @@ public class ProductServiceImpl implements ProductService {
                     productDto.setSku(product.getSku());
                     productDto.setPrice(product.getPrice());
                     productDto.setStockQuantity(product.getStockQuantity());
-                    productDto.setCategoryId(product.getCategory().getId());
+                    if (product.getCategory() != null) {
+                        productDto.setCategoryId(product.getCategory().getId());
+                    }
                     return ResponseEntity.ok(new SuccessResponse<>(200, "Product found", productDto));
                 })
                 .orElseGet(() -> ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Product not found", null)));
@@ -107,7 +138,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ResponseEntity<SuccessResponse<List<ProductDto>>> getAllProducts() {
-        List<ProductDto> products = productRepository.findAll().stream()
+        List<Product> productList = productRepository.findAll();
+        if (productList == null || productList.isEmpty()) {
+            return ResponseEntity.ok(new SuccessResponse<>(200, "No products available", Collections.emptyList()));
+        }
+
+        List<ProductDto> products = productList.stream()
                 .map(product -> {
                     ProductDto productDto = new ProductDto();
                     productDto.setId(product.getId());
@@ -115,10 +151,13 @@ public class ProductServiceImpl implements ProductService {
                     productDto.setSku(product.getSku());
                     productDto.setPrice(product.getPrice());
                     productDto.setStockQuantity(product.getStockQuantity());
-                    productDto.setCategoryId(product.getCategory().getId());
+                    if (product.getCategory() != null) {
+                        productDto.setCategoryName(product.getCategory().getCategoryName());
+                    }
                     return productDto;
                 })
                 .collect(Collectors.toList());
+
         return ResponseEntity.ok(new SuccessResponse<>(200, "All products", products));
     }
 }

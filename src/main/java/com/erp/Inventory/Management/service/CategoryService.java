@@ -1,9 +1,7 @@
 package com.erp.Inventory.Management.service;
-
 import com.erp.Inventory.Management.dto.CategoryDto;
 import com.erp.Inventory.Management.dto.SuccessResponse;
 import org.springframework.http.ResponseEntity;
-
 import java.util.List;
 
 public interface CategoryService {
