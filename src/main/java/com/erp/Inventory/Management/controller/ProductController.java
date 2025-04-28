@@ -36,7 +36,7 @@ public class ProductController {
     }
 
     @GetMapping("/getAll")
-    public ResponseEntity<SuccessResponse<List<ProductDto>>> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<SuccessResponse<List<ProductDto>>> getAllProducts(@RequestParam(required=false) Integer categoryId) {
+        return productService.getAllProducts(categoryId);
     }
 }

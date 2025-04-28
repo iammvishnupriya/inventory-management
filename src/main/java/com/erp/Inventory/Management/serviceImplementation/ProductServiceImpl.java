@@ -137,20 +137,29 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<SuccessResponse<List<ProductDto>>> getAllProducts() {
-        List<Product> productList = productRepository.findAll();
-        if (productList == null || productList.isEmpty()) {
-            return ResponseEntity.ok(new SuccessResponse<>(200, "No products available", Collections.emptyList()));
+    public ResponseEntity<SuccessResponse<List<ProductDto>>> getAllProducts(Integer categoryId) {
+        List<Product> productList;
+
+        if (categoryId != null) {
+            productList = productRepository.findByCategoryId(categoryId);
+            if (productList == null || productList.isEmpty()) {
+                return ResponseEntity.ok(new SuccessResponse<>(200, "No products available for this category", Collections.emptyList()));
+            }
+        } else {
+            productList = productRepository.findAll();
+            if (productList == null || productList.isEmpty()) {
+                return ResponseEntity.ok(new SuccessResponse<>(200, "No products available", Collections.emptyList()));
+            }
         }
 
         List<ProductDto> products = productList.stream()
                 .map(product -> {
                     ProductDto productDto = new ProductDto();
-                    productDto.setId(product.getId());
-                    productDto.setName(product.getName());
-                    productDto.setSku(product.getSku());
-                    productDto.setPrice(product.getPrice());
-                    productDto.setStockQuantity(product.getStockQuantity());
+                    productDto.setId(product.getId()!=null ? product.getId(): 0);
+                    productDto.setName(product.getName()!=null ? product.getName(): "");
+                    productDto.setSku(product.getSku()!= null ? product.getSku(): "");
+                    productDto.setPrice(product.getPrice()!=null ? product.getPrice(): 0.0);
+                    productDto.setStockQuantity(product.getStockQuantity()!=null? product.getStockQuantity(): 0);
                     if (product.getCategory() != null) {
                         productDto.setCategoryName(product.getCategory().getCategoryName());
                     }
@@ -158,6 +167,7 @@ public class ProductServiceImpl implements ProductService {
                 })
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new SuccessResponse<>(200, "All products", products));
+        return ResponseEntity.ok(new SuccessResponse<>(200, "Products retrieved", products));
     }
+
 }
