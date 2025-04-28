@@ -39,9 +39,10 @@ public class ProductServiceImpl implements ProductService {
             return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Category not found", null));
         }
 
+        String generatedSku = generateProductSku();
+
         Product product = new Product();
         product.setName(dto.getName());
-        product.setSku(dto.getSku());
         product.setPrice(dto.getPrice());
         product.setStockQuantity(dto.getStockQuantity());
         product.setCategory(categoryOpt.get());
@@ -51,12 +52,20 @@ public class ProductServiceImpl implements ProductService {
         ProductDto productDto = new ProductDto();
         productDto.setId(saved.getId());
         productDto.setName(saved.getName());
-        productDto.setSku(saved.getSku());
+        productDto.setSku(generatedSku);
         productDto.setPrice(saved.getPrice());
         productDto.setStockQuantity(saved.getStockQuantity());
         productDto.setCategoryId(saved.getCategory().getId());
 
         return ResponseEntity.ok(new SuccessResponse<>(200, "Product created", productDto));
+    }
+
+    private String generateProductSku() {
+        Long count = productRepository.count(); // Get the current count of products
+        long nextNumber = count + 1; // Next SKU number
+    
+        // Format to PC0001, PC0002, etc.
+        return String.format("PC%04d", nextNumber);
     }
 
     @Override
