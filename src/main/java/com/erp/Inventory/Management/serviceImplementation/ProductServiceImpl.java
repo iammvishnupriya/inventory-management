@@ -1,5 +1,6 @@
 package com.erp.Inventory.Management.serviceImplementation;
 
+import com.erp.Inventory.Management.Enum.ProductStatus;
 import com.erp.Inventory.Management.dto.ProductDto;
 import com.erp.Inventory.Management.dto.SuccessResponse;
 import com.erp.Inventory.Management.model.Category;
@@ -43,6 +44,7 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = new Product();
         product.setName(dto.getName());
+        product.setSku(generatedSku);
         product.setPrice(dto.getPrice());
         product.setStockQuantity(dto.getStockQuantity());
         product.setCategory(categoryOpt.get());
@@ -109,27 +111,29 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<SuccessResponse<String>> deleteProduct(Integer id) {
-        if (id == null) {
+    public ResponseEntity<SuccessResponse<String>> deleteProduct(String productCode) {
+        if (productCode == null) {
             return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Product ID is required", null));
         }
 
-        Optional<Product> productOpt = productRepository.findById(id);
+        Optional<Product> productOpt = productRepository.findBySku(productCode);
         if (productOpt.isEmpty()) {
             return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Product not found", null));
         }
 
-        productRepository.deleteById(id);
+        Product product = productOpt.get();
+        product.setStatus(ProductStatus.INACTIVE);
+        productRepository.save(product);   
+
         return ResponseEntity.ok(new SuccessResponse<>(200, "Product deleted", "Deleted successfully"));
     }
 
     @Override
-    public ResponseEntity<SuccessResponse<ProductDto>> getProductById(Integer id) {
-        if (id == null) {
+    public ResponseEntity<SuccessResponse<ProductDto>> getProductById(String productCode) {
+        if (productCode == null) {
             return ResponseEntity.badRequest().body(new SuccessResponse<>(400, "Product ID is required", null));
         }
-
-        Optional<Product> productOpt = productRepository.findById(id);
+        Optional<Product> productOpt = productRepository.findBySku(productCode);
         return productOpt.map(product -> {
                     ProductDto productDto = new ProductDto();
                     productDto.setId(product.getId());

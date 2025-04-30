@@ -1,5 +1,7 @@
 package com.erp.Inventory.Management.model;
 
+import com.erp.Inventory.Management.Enum.ProductStatus;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +19,9 @@ public class Product {
     private String sku;
     private Double price;
     private Integer stockQuantity;
+
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status = ProductStatus.ACTIVE;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -68,5 +73,13 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public ProductStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
     }
 }

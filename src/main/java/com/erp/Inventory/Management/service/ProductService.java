@@ -9,7 +9,7 @@ import java.util.List;
 public interface ProductService {
     ResponseEntity<SuccessResponse<ProductDto>> createProduct(ProductDto dto);
     ResponseEntity<SuccessResponse<ProductDto>> updateProduct(Integer id, ProductDto dto);
-    ResponseEntity<SuccessResponse<String>> deleteProduct(Integer id);
-    ResponseEntity<SuccessResponse<ProductDto>> getProductById(Integer id);
+    ResponseEntity<SuccessResponse<String>> deleteProduct(String productCode);
+    ResponseEntity<SuccessResponse<ProductDto>> getProductById(String productCode);
     ResponseEntity<SuccessResponse<List<ProductDto>>> getAllProducts(Integer categoryId);
 }

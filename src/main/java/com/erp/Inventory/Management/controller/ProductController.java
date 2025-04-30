@@ -25,17 +25,17 @@ public class ProductController {
         return productService.updateProduct(id, dto);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<SuccessResponse<String>> deleteProduct(@PathVariable Integer id) {
-        return productService.deleteProduct(id);
+    @DeleteMapping("/deleteByProductCode")
+    public ResponseEntity<SuccessResponse<String>> deleteProduct(@RequestParam String productCode) {
+        return productService.deleteProduct(productCode);
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<SuccessResponse<ProductDto>> getProductById(@PathVariable Integer id) {
-        return productService.getProductById(id);
+    @GetMapping("/getByProductCode")
+    public ResponseEntity<SuccessResponse<ProductDto>> getProductById(@RequestParam String productCode) {
+        return productService.getProductById(productCode);
     }
 
-    @GetMapping("/getAll")
+    @GetMapping("/getAllProductByCategoryId")
     public ResponseEntity<SuccessResponse<List<ProductDto>>> getAllProducts(@RequestParam(required=false) Integer categoryId) {
         return productService.getAllProducts(categoryId);
     }
