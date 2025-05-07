@@ -195,7 +195,7 @@ public class ProductServiceImpl implements ProductService {
                     productDto.setSku(product.getSku());
                     productDto.setPrice(product.getPrice());
                     productDto.setStockQuantity(product.getStockQuantity());
-                    productDto.setCategoryId(product.getCategory().getId());
+                    productDto.setCategoryName(product.getCategory().getCategoryName());
                     return productDto;
                 })
                 .collect(Collectors.toList());
