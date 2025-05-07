@@ -12,4 +12,6 @@ public interface ProductService {
     ResponseEntity<SuccessResponse<String>> deleteProduct(String productCode);
     ResponseEntity<SuccessResponse<ProductDto>> getProductById(String productCode);
     ResponseEntity<SuccessResponse<List<ProductDto>>> getAllProducts(Integer categoryId);
+
+    public SuccessResponse<List<ProductDto>> getProductsWithLowStock();
 }
