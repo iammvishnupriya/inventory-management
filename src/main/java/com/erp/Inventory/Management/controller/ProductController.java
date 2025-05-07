@@ -39,4 +39,10 @@ public class ProductController {
     public ResponseEntity<SuccessResponse<List<ProductDto>>> getAllProducts() {
         return productService.getAllProducts();
     }
+    @GetMapping("/lowStock")
+    public ResponseEntity<SuccessResponse<List<ProductDto>>> getProductsWithLowStock() {
+        SuccessResponse<List<ProductDto>> response = productService.getProductsWithLowStock();
+        return ResponseEntity.ok(response);
+    }
+
 }

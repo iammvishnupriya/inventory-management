@@ -121,5 +121,23 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(new SuccessResponse<>(200, "All products", products));
     }
+    public SuccessResponse<List<ProductDto>> getProductsWithLowStock() {
+        List<Product> products = productRepository.findByStockQuantityLessThanEqual(100);
+
+        List<ProductDto> productDtos = products.stream()
+                .map(product -> {
+                    ProductDto productDto = new ProductDto();
+                    productDto.setId(product.getId());
+                    productDto.setName(product.getName());
+                    productDto.setSku(product.getSku());
+                    productDto.setPrice(product.getPrice());
+                    productDto.setStockQuantity(product.getStockQuantity());
+                    productDto.setCategoryId(product.getCategory().getId());
+                    return productDto;
+                })
+                .collect(Collectors.toList());
+
+        return new SuccessResponse<>(200, "Products with low stock", productDtos);
+    }
 }
 

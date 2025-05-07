@@ -17,4 +17,6 @@ public interface ProductService {
     ResponseEntity<SuccessResponse<ProductDto>> getProductById(String id);
 
     ResponseEntity<SuccessResponse<List<ProductDto>>> getAllProducts();
+    public SuccessResponse<List<ProductDto>> getProductsWithLowStock();
+
 }
